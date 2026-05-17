@@ -47,14 +47,16 @@ def pixels_to_ascii(img, ramp: str):
     return ascii_str
 
 def to_text_file(ascii_img: str):
+    '''Make a text file of the ASCII image'''
     with open("output.txt", "w") as f:
         f.write(ascii_img)
 
 
 def main():
     #Initial configs
-    img_path = 'images/img1.jpeg'
-    new_width = 400
+    img_path = 'images/img2.png'
+    output_width = 700
+    terminal_width = 60
     ramp = "@%#*+=-:. " # darkest --> brightest
 
     #Load the image
@@ -63,20 +65,23 @@ def main():
     #Grayscaled the image
     image = to_grayscale(image)
 
-    #Resize the image so it fits the terminal frame
-    image = resize_image(image, new_width= new_width)
+    #Resize the image
+    image_output = resize_image(image, new_width= output_width)
+    image_terminal = resize_image(image, new_width= terminal_width)
 
     #Make ASCII art
-    ascii_image = pixels_to_ascii(image, ramp= ramp)
+    ascii_image_output = pixels_to_ascii(image_output, ramp= ramp)
+    ascii_image_terminal = pixels_to_ascii(image_terminal, ramp= ramp)
 
     #Print ASCII art on terminal
-    print(ascii_image)
+    print(ascii_image_terminal)
 
     #Save to output.txt
-    to_text_file(ascii_image)
+    to_text_file(ascii_image_output)
 
-
-
+    #Note
+    print("-"*20 + " HEY BRO READ THIS!" + "-"*20)
+    print(f"You may see the image is kinda shit because its size\nis only {image_terminal.size} so it can fit the terminal frame.\nYou can check the text file which has the size of {image_output.size}.\nIt will be much better (remember to zoom out)!!!")
 
 if __name__ == '__main__':
     main()
