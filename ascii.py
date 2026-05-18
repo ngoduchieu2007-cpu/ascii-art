@@ -1,4 +1,5 @@
-from PIL import Image
+from PIL import Image 
+import numpy as np
 
 def load_image(path: str):
     '''Load the image from its path and return an Image object'''
@@ -28,36 +29,33 @@ def resize_image(img, new_width: int, terminal_ratio = 0.45):
 
 def pixels_to_ascii(img, ramp: str):
     '''Convert all the pixels to ASCII and return a ASCII string'''
-    ascii_str = ''
-    width, height = img.size
-    ramp_size = len(ramp)
 
-    #Loops through every pixels
-    for y in range(height):
-        for x in range(width):
-            pixel = img.getpixel((x, y)) # pixel's value ranges from 0 -> 255
+    pixels = np.array(img) # 2D numpy array represents pixels of the image
+    assert len(pixels.shape) == 2, 'Image has to be black - white'
 
-            ramp_index = int((pixel / 256) * ramp_size) 
-            ascii_pixel = ramp[ramp_index] # Calculate the corresponding ASCII symbol
+    ramp_index = ((pixels / 256) * len(ramp)).astype(int) # 2D numpy array represents index of ramp
+    ramp_array = np.array(list(ramp))
 
-            ascii_str += ascii_pixel # Add to final string
+    chars = ramp_array[ramp_index]
 
-        ascii_str += '\n' # Start new line once finishing a row
+    rows_char = [''.join(row) for row in chars]
+
+    ascii_str = '\n'.join(rows_char)
 
     return ascii_str
 
 def to_text_file(ascii_img: str):
     '''Make a text file of the ASCII image'''
-    with open("output.txt", "w") as f:
+    with open("output/output.txt", "w") as f:
         f.write(ascii_img)
 
 
 def main():
     #Initial configs
-    img_path = 'images/img2.png'
+    img_path = 'images/img3.png'
     output_width = 700
     terminal_width = 60
-    ramp = "@%#*+=-:. " # darkest --> brightest
+    ramp = " .:-=+*#%@" # darkest --> brightest
 
     #Load the image
     image = load_image(img_path)
